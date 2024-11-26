@@ -50,7 +50,7 @@ This is the initial console-based version of the project. Future updates will in
 
 ## Credits
 - Created as part of [The Odin Project](https://www.theodinproject.com/) curriculum
-- Developed by [Your Name]
+- Developed by Tran Quang Kien
 
 ## License
 This project is open source and available under the [MIT License](LICENSE.md).
