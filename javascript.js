@@ -1,24 +1,18 @@
-// Write the logic to get the computer choice
-function getComputerChoice () {
+// Get computer's choice
+function getComputerChoice() {
     let computerChoice = Math.floor(Math.random() * 3)
     if (computerChoice === 0) {
-        return computerChoice = "rock";
+        return "rock";
     } else if (computerChoice === 1) {
-        return computerChoice = "paper";
-    } else return computerChoice = "scissors";
+        return "paper";
+    } else return "scissors";
 }
 
-// Write the logic to get the human choice
-function getHumanChoice () {
-    let humanChoice = prompt("Please choose: Rock, Paper or Scissors");
-    return humanChoice = humanChoice.toLowerCase();
-}
+// Initialize scores
+let humanScore = 0;
+let computerScore = 0;
 
-// Declare the players score variables
-humanScore = 0;
-computerScore = 0;
-
-// Write the logic to play a single round
+// Play a single round
 function playRound(humanChoice, computerChoice) {
     // Validate human input
     if (!["rock", "paper", "scissors"].includes(humanChoice)) {
@@ -47,26 +41,83 @@ function playRound(humanChoice, computerChoice) {
     }
 }
 
-// Play full game
-function game(rounds = 5) {
+// Function to update the display
+function updateDisplay(result) {
+    const resultDiv = document.querySelector('#result');
+    const scoreDiv = document.querySelector('#score');
+    
+    if (resultDiv && scoreDiv) {
+        resultDiv.textContent = result;
+        scoreDiv.textContent = `Score - You: ${humanScore}, Computer: ${computerScore}`;
+    }
+}
+
+// Set up button event listeners
+function initializeGame() {
+    const buttons = document.querySelectorAll('.choice-btn');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const humanChoice = button.id;
+            const computerChoice = getComputerChoice();
+            const result = playRound(humanChoice, computerChoice);
+            updateDisplay(result);
+            
+            // Check if game should end (e.g., after 5 rounds)
+            if (humanScore >= 5 | computerScore >= 5) {
+                endGame();
+            }
+        });
+    });
+}
+
+// Function to end the game
+function endGame() {
+    const resultDiv = document.querySelector('#result');
+    const buttons = document.querySelectorAll('.choice-btn');
+    
+    // Disable buttons
+    buttons.forEach(button => button.disabled = true);
+    
+    // Display final result
+    let finalMessage = "\nGame Over! ";
+    if (humanScore > computerScore) {
+        finalMessage += `You win the game! Final score: ${humanScore}-${computerScore}`;
+    } else if (computerScore > humanScore) {
+        finalMessage += `Computer wins the game! Final score: ${computerScore}-${humanScore}`;
+    } else {
+        finalMessage += `It's a tie! Final score: ${humanScore}-${computerScore}`;
+    }
+    
+    if (resultDiv) {
+        resultDiv.textContent = finalMessage;
+    }
+    
+    // Add reset button
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'Play Again';
+    resetButton.addEventListener('click', resetGame);
+    document.body.appendChild(resetButton);
+}
+
+// Function to reset the game
+function resetGame() {
     humanScore = 0;
     computerScore = 0;
     
-    for (let i = 0; i < rounds; i++) {
-        console.log(`Round ${i + 1}:`);
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        console.log(playRound(humanChoice, computerChoice));
-        console.log(`Score - You: ${humanScore}, Computer: ${computerScore}`);
-    }
-
-    // Determine final winner
-    console.log("\nGame Over!");
-    if (humanScore > computerScore) {
-        console.log(`You win the game! Final score: ${humanScore}-${computerScore}`);
-    } else if (computerScore > humanScore) {
-        console.log(`Computer wins the game! Final score: ${computerScore}-${humanScore}`);
-    } else {
-        console.log(`It's a tie! Final score: ${humanScore}-${computerScore}`);
+    // Re-enable choice buttons
+    const buttons = document.querySelectorAll('.choice-btn');
+    buttons.forEach(button => button.disabled = false);
+    
+    // Clear displays
+    updateDisplay('Choose your weapon!');
+    
+    // Remove reset button
+    const resetButton = document.querySelector('button:not(.choice-btn)');
+    if (resetButton) {
+        resetButton.remove();
     }
 }
+
+// Initialize the game when the page loads
+document.addEventListener('DOMContentLoaded', initializeGame);
