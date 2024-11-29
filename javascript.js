@@ -63,7 +63,7 @@ function initializeGame() {
             const result = playRound(humanChoice, computerChoice);
             updateDisplay(result);
             
-            // Check if game should end (e.g., after 5 rounds)
+            // Check if game should end
             if (humanScore >= 5 | computerScore >= 5) {
                 endGame();
             }
